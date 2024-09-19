@@ -1,17 +1,22 @@
-def total_gastado(viajes):
-    if viajes <= 20:
+def total_gastado(Cant_viajes,total):
+    
+    if Cant_viajes <= 20:
         tarifa = 10
-    elif 21 <= viajes <= 30:
+    elif 21 <= Cant_viajes <= 30:
         tarifa = 10 * 0.8
-    elif 31 <= viajes <= 40:
+    elif 31 <= Cant_viajes <= 40:
         tarifa = 10 * 0.7
     else:
         tarifa = 10 * 0.6
     
-    return viajes * tarifa
+    total=Cant_viajes*tarifa
+
+    return total
 
 def main():
-    viajes = int(input("Ingrese la cantidad de viajes: "))  
-    print(f"El total gastado es: {total_gastado(viajes)}")
+    Cant_viajes = int(input("ingresar la cantidad de viajes: ")) 
+    total=0 
+    viajes= total_gastado(Cant_viajes,total)
+    print("el total gastado es:",viajes)
 if __name__ == "__main__":
     main() 

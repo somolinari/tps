@@ -1,22 +1,22 @@
-def mayor_unico(a, b, c):
-    if (a > b and a > c) and (b != c):
-        return a
-    elif (b > a and b > c) and (a != c):
-        return b
-    elif (c > a and c > b) and (a != b):
-        return c
+def mayor(num1 , num2, num3):
+    if (num1 > num2 and num1 > num3) and (num2 != num3):
+        return num1
+    elif (num2 > num1 and num2 > num3) and (num1 != num3):
+        return num2
+    elif (num3 > num1 and num3 > num2) and (num1 != num2):
+        return num3
     else:
         return -1
 
 def main():
-    a = int(input("Ingrese el primer número: "))
-    b = int(input("Ingrese el segundo número: "))
-    c = int(input("Ingrese el tercer número: "))
+    num1 = int(input("ingresarvel 1er numero: "))
+    num2 = int(input("Ingresar el 2do numero: "))
+    num3 = int(input("Ingresar el 3er numero: "))
 
-    resultado = mayor_unico(a, b, c)
+    resultado = mayor(num1, num2, num3)
     if resultado == -1:
-        print("No hay un mayor único.")
+        print("no existe un maximo")
     else:
-        print(f"El mayor único es: {resultado}")
+        print("el maximo es: ",resultado)
 if __name__ == "__main__":
     main()

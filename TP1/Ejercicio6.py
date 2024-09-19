@@ -1,15 +1,16 @@
-def concatenar_numeros(a, b):
+def concatenar_numeros(num1, num2):
    
-    a_str = str(a)
-    b_str = str(b)
+    num1_str = str(num1)
+    num2_str = str(num2)
    
-    concatenado = a_str + b_str
+    concatenado = num1_str + num2_str
 
     return int(concatenado)
 def main():
-    a = int(input("Ingrese el primer número: "))
-    b = int(input("Ingrese el segundo número: "))
+    num1 = int(input("ingresar el primer numero: "))
+    num2 = int(input("ingresar el segundo numero: "))
+    resultado=concatenar_numeros(num1,num2)
 
-    print(f"El número concatenado es: {concatenar_numeros(a, b)}")
+    print("el numero concatenado es:",resultado)
 if __name__ == "__main__":
     main()   
