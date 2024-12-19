@@ -1,29 +1,42 @@
-import csv
-from datetime import datetime
+def validar_fecha(fecha):
+    if len(fecha) != 8 or not fecha.isdigit():
+        return False
+    dia, mes, año = int(fecha[:2]), int(fecha[2:4]), int(fecha[4:])
+    if mes < 1 or mes > 12:
+        return False
+    if dia < 1 or dia > 31:
+        return False
+    if mes in {4, 6, 9, 11} and dia > 30:
+        return False
+    if año < 2000:
+        return False
 
 def registrar_huespedes(archivo_salida):
-    with open(archivo_salida, 'w', newline='') as f:
-        writer = csv.writer(f)
+    with open(archivo_salida, 'w') as f:
         while True:
-            dni = int(input("Ingrese el DNI del cliente (-1 para terminar): "))
-            if dni == -1:
+            dni = input("Ingrese el DNI del cliente (-1 para terminar): ")
+            if dni == "-1":
                 break
-            apellido_nombre = input("Ingrese Apellido y Nombre: ")
-            fecha_ingreso = input("Ingrese fecha de ingreso (DDMMAAAA): ")
-            fecha_egreso = input("Ingrese fecha de egreso (DDMMAAAA): ")
-            cantidad_ocupantes = int(input("Ingrese cantidad de ocupantes: "))
-            writer.writerow([dni, apellido_nombre, fecha_ingreso, fecha_egreso, cantidad_ocupantes])
+            apellido_nombre = input("ngrese Apellido y Nombre: ")
+            fecha_ingreso = input("ingrese fecha de ingreso (DDMMAAAA): ")
+            while not validar_fecha(fecha_ingreso):
+                print("Fecha invalida, intente nuevamente")
+                fecha_ingreso = input("ingrese fecha de ingreso (DDMMAAAA): ")
+            fecha_egreso = input("ingrese fecha de egreso (DDMMAAAA): ")
+            while not validar_fecha(fecha_egreso):
+                print("Fecha invalida,intente nuevamente")
+                fecha_egreso = input("ingrese fecha de egreso (DDMMAAAA): ")
+            cantidad_ocupantes = input("ingrese cantidad de ocupantes: ")
+            f.write(f"{dni},{apellido_nombre},{fecha_ingreso},{fecha_egreso},{cantidad_ocupantes}\n")
 
 def asignar_habitaciones(archivo_huespedes):
+    habitaciones = {}
     with open(archivo_huespedes, 'r') as f:
-        reader = csv.reader(f)
-        habitaciones = {}
-        for row in reader:
-            dni, apellido_nombre, fecha_ingreso, fecha_egreso, cantidad_ocupantes = row
+        for linea in f:
+            dni, apellido_nombre, fecha_ingreso, fecha_egreso, cantidad_ocupantes = linea.strip().split(',')
             piso = len(habitaciones) // 6 + 1
             habitacion = len(habitaciones) % 6 + 1
             habitaciones[dni] = (apellido_nombre, piso, habitacion, fecha_ingreso, fecha_egreso, cantidad_ocupantes)
-
     return habitaciones
 
 def habitaciones_ocupadas(habitaciones):
@@ -35,28 +48,35 @@ def habitaciones_ocupadas(habitaciones):
         ocupadas[piso] += 1
 
     piso_max_ocupado = max(ocupadas, key=ocupadas.get)
-    print(f"piso con mayor cantidad de habitaciones ocupadas: {piso_max_ocupado}")
+    print(f"Piso con mayor cantidad de habitaciones ocupadas: {piso_max_ocupado}")
 
 def habitaciones_vacias(habitaciones):
     total_habitaciones = 10 * 6
     ocupadas = len(habitaciones)
-    print(f"total de habitaciones vacías: {total_habitaciones - ocupadas}")
+    print(f"Total de habitaciones vacías: {total_habitaciones - ocupadas}")
 
 def proxima_habitacion_desocupada(habitaciones, fecha_actual):
     desocupadas = []
     for dni, datos in habitaciones.items():
-        fecha_egreso = datetime.strptime(datos[4], "%d%m%Y")
+        fecha_egreso = datos[4]
         if fecha_egreso > fecha_actual:
             desocupadas.append((dni, datos))
-
     return desocupadas
+
 def main():
-    registrar_huespedes('huespedes.csv')
-    habitaciones = asignar_habitaciones('huespedes.csv')
+    archivo_huespedes = 'huespedes.txt'
+    registrar_huespedes(archivo_huespedes)
+    habitaciones = asignar_habitaciones(archivo_huespedes)
     habitaciones_ocupadas(habitaciones)
     habitaciones_vacias(habitaciones)
-    fecha_actual = datetime.strptime(input("ingresar la fecha actual: "), "%d%m%Y")
+    fecha_actual = input("Ingrese la fecha actual (DDMMAAAA): ")
+    while not validar_fecha(fecha_actual):
+        print("Fecha inválida. Intente nuevamente.")
+        fecha_actual = input("Ingrese la fecha actual (DDMMAAAA): ")
     desocupadas = proxima_habitacion_desocupada(habitaciones, fecha_actual)
-    print("habitaciones que se desocupan proximamente:", desocupadas)
+    print("Habitaciones que se desocupan próximamente:")
+    for dni, datos in desocupadas:
+        print(f"DNI: {dni}, Nombre: {datos[0]}, Fecha de egreso: {datos[4]}")
+
 if __name__ == "__main__":
     main()
